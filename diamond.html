@@ -1,0 +1,199 @@
+<html>
+	<!-- set utf-8 -->
+	<meta charset="utf-8">
+    <head>
+	<title style="text-align: center;">Diamond Tonality</title>
+    </head>
+    <style>
+	#canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+	    /* make it bigger  */
+          }
+	input[type=text] {
+		width: 30%;
+		box-sizing: border-box;
+		border: 2px solid #ccc;
+		border-radius: 4px;
+		font-size: 16px;
+		background-color: white;
+		background-position: 10px 10px; 
+		transition: width 0.4s ease-in-out;
+	}
+	input[type=text]:focus {
+		width: 30%;
+	}
+	input[type=submit] {
+		width: 15%;
+		height: 3.5%;
+		background-color: #366fc5;
+		color: white;		
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+	}
+	input[type=checkbox] {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		display: inline-block;
+		position: relative;
+		background-color: #d1d1d1;
+		border: 1px solid #000000;
+		border-radius: 3px;
+		width: 20px;
+		height: 20px;
+		vertical-align: middle;
+		cursor: pointer;
+	}
+	input[type=checkbox]:checked {
+		background-color: #366fc5;
+	}
+	input[type=checkbox]:checked:after {
+		content: '\2713';
+		font-size: 14px;
+		position: absolute;
+		top: 0px;
+		left: 3px;
+		color: #fff;
+	}
+
+
+	div {
+		border-radius: 10px;
+		background-color: #f2f2f2;
+		padding: 20px;
+	}
+    </style>
+    <!-- make one svg function that will build the diamond -->
+    <!-- load  p5.js -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
+    <script src="diamond.js"></script>
+	<script src="plug.js"></script>
+	<script type="text/javascript">
+		var heavyModule = null;
+		var loader = null;
+		window.onload = function() {
+		  plug_Module().then(loadedModule => {
+			heavyModule = loadedModule;
+			moduleLoaded();
+		  });
+		  document.getElementById("transportButton").style.visibility = "hidden";
+		}
+  
+		function moduleLoaded() {
+		  loader = new heavyModule.AudioLibLoader();
+		  document.getElementById("transportButton").style.visibility = "visible";
+		}
+  
+		function start() {
+		  if(!loader.webAudioContext) {
+			loader.init({
+			  	blockSize: 2048,
+				printHook: onPrint,
+				sendHook: onFloatMessage,
+			  webAudioContext: null
+			}).then(() => {
+			  });
+		  }
+		  loader.start();
+		}
+  
+		function stop() {
+		  loader.stop();
+		}
+  
+		function toggleTransport(element) {
+		  (loader.isPlaying) ? stop() : start();
+		}
+  
+		function onPrint(message) {
+		  console.log(message);
+		}
+  
+		function onFloatMessage(sendName, floatValue) {
+		  console.log(sendName, floatValue);
+		}
+  
+		// randomizer
+		function randomiseParameters() {
+		}
+
+		// Generated Event Update Methods
+		function sendEvent_trigger() {
+			if(loader.webAudioWorklet) {
+				loader.sendEvent("trigger");
+			} else {
+				loader.audiolib.sendEvent("trigger");
+			}
+			soundIsOn = true;
+		}
+	  </script>
+
+
+
+
+    <body>
+	<h1 style="text-align: center;">Diamond Tonality</h1>
+	<p style="text-align: center;">This is a Diamond Tonality Generator</p>
+	<!-- add form in 0 until 600px start from left-->
+	<form action="javascript:newDiamondLimit(document.getElementById('Partchlimit').value)" style="margin-left: 0px; margin-right: calc(100% - 550px);">
+		<div style="text-align: center;">
+			<label for="Partchlimit" style="text-align: center; margin-right: 10px;">Limit</label>
+			<input type="text" id="Partchlimit" name="Partchlimit" placeholder="Limit of Diamond">
+			<input type="submit" value="Generate">
+			<label style="font-weight: bold; margin-left: 10px;">
+				Turn Audio On
+				<input type="checkbox" id="transportButton" onchange="toggleTransport();">
+			</label>
+		</div>
+	</form>
+	<!-- add paragraph in 600px until 100% start from left add justifed text-->
+	<section style="margin-left: 600px; margin-right: 20px; text-align: center; position:absolute">
+		<p align="justify">
+			É de conhecimento comum na comunidade musical que a escala temperada com 12 sons foi amplamente utilizada pela grande maioria dos compositores. Partch, por sua vez, propôs uma nova teoria para a geração de escalas: a teoria da Tonalidade Diamante (ou tonalidade losango como a chama Franck Jedrzejewski). Partch define Tonalidade Diamante como sendo 
+		</p>
+
+		<cite align="justify">
+			
+			um arranjo arbitrário das proporções monofônicas, projetadas para constituir uma prova evidente, pelo menos da dupla identidade de cada proporção e, consequentemente, da capacidade de um sistema monofônico de afinação justa de fornecer tons que possam, cada um deles, serem percebidos em mais de um sentido (Partch, 1974, p. 74-75). 
+		</cite>
+			
+		<p align="justify">
+			A Tonalidade Diamante é baseada na afinação justa, ou seja, frequências que podem ser expressas por proporções de números inteiros, na qual se aplicam conceitos de limite de identidade. Dentro deste campo de compreensão, Partch elenca fatores importantes para a definição de Identidade: 
+		</p>
+		<cite align="justify">
+			um dos correlativos, “maior” ou “menor”, em uma tonalidade; um dos ingredientes de número-ímpar, um ou vários ou todos que ajam como um polo de tonalidade: 1-3-5-7-9-11 nesta teoria. Este termo não deve ser confundido com os ingredientes de conteúdo harmônico, ou com parciais (Partch, 1974, p. 71). 
+		</cite>
+
+		<p align="justify">
+			Para o conceito de identidade, Partch aplicou limites dentro da teoria de Tonalidade Diamante: no limite-5, as frações têm numeradores e denominadores baseados nas identidades 1, 3 e 5; no limite-7 temos 1, 3, 5 e 7, e assim sucessivamente (sempre com números ímpares).
+		</p>
+			
+			
+
+</p>
+
+
+	</section>
+
+
+	
+	<script>
+		// always uncheck the transport button
+		document.getElementById("transportButton").checked = false;	
+		
+
+
+
+	</script>
+
+
+
+
+    </body>
+	
+</html>
+
