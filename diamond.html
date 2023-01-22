@@ -13,7 +13,7 @@
 	    /* make it bigger  */
           }
 	input[type=text] {
-		width: 30%;
+		width: 10%;
 		box-sizing: border-box;
 		border: 2px solid #ccc;
 		border-radius: 4px;
@@ -131,27 +131,28 @@
 			soundIsOn = true;
 		}
 	  </script>
-
-
-
-
     <body>
 	<h1 style="text-align: center;">Diamond Tonality</h1>
-	<p style="text-align: center;">This is a Diamond Tonality Generator</p>
-	<!-- add form in 0 until 600px start from left-->
+	<hr>
 	<form action="javascript:newDiamondLimit(document.getElementById('Partchlimit').value)" style="margin-left: 0px; margin-right: calc(100% - 550px);">
 		<div style="text-align: center;">
 			<label for="Partchlimit" style="text-align: center; margin-right: 10px;">Limit</label>
 			<input type="text" id="Partchlimit" name="Partchlimit" placeholder="Limit of Diamond">
 			<input type="submit" value="Generate">
-			<label style="font-weight: bold; margin-left: 10px;">
+			<label style="font-weight: bold; margin-left: 4px;">
 				Turn Audio On
 				<input type="checkbox" id="transportButton" onchange="toggleTransport();">
 			</label>
+			<label style="font-weight: bold; margin-left: 4px;">
+				Reduce Octave
+				<input type="checkbox" id="reduceOctave" onchange="newDiamondLimit(document.getElementById('Partchlimit').value)">
+			</label>
 		</div>
 	</form>
-	<!-- add paragraph in 600px until 100% start from left add justifed text-->
-	<section style="margin-left: 600px; margin-right: 20px; text-align: center; position:absolute">
+	<!-- add input descript = 'Fund. Freq'  -->
+
+	<input type="range" min="50" max="1000" value="261" class="slider" id="fundRange" style="margin-left: 40px; width: 485px;">
+	<section style="margin-left: 600px; margin-right: 20px; top: 9%; position: absolute;">
 		<p align="justify">
 			É de conhecimento comum na comunidade musical que a escala temperada com 12 sons foi amplamente utilizada pela grande maioria dos compositores. Partch, por sua vez, propôs uma nova teoria para a geração de escalas: a teoria da Tonalidade Diamante (ou tonalidade losango como a chama Franck Jedrzejewski). Partch define Tonalidade Diamante como sendo 
 		</p>
@@ -184,10 +185,6 @@
 	<script>
 		// always uncheck the transport button
 		document.getElementById("transportButton").checked = false;	
-		
-
-
-
 	</script>
 
 

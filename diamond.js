@@ -2,21 +2,9 @@ var i = 0;
 var mousePressed = false;
 var lastIdentityPlayer;
 var fundamentalPitch;
+var playNumber  = 1;
+var reduceOctave;
 
-// =================================================
-function setup() {
-    canvaSize = 550;
-    cnv = createCanvas(canvaSize, canvaSize);
-    diamondLimit = 5;
-    background(255);
-    fundamentalPitch = 261.63 / 2;
-    // rect rect around canvas, add round corners
-    stroke(0);
-    strokeWeight(1);
-    noFill(); 
-    rect(0, 0, canvaSize, canvaSize, 20);
-
-}
 
 // =================================================
 function freq2midi(freq) {
@@ -24,8 +12,44 @@ function freq2midi(freq) {
 }
 
 // =================================================
+function reduceOctaveOfRatio(nume, deno){
+    var octave = nume / deno;
+    var newRatio;
+    if (octave > 2){
+        newDeno = deno * 2;
+        return reduceOctaveOfRatio(nume, newDeno);
+    }
+    if (octave < 1){
+        newNume = nume * 2;
+        return reduceOctaveOfRatio(newNume, deno);
+    }
+    
+    if (octave <= 2 && octave >= 1){
+        return nume + "/" + deno;
+    }
+}
+
+// =================================================
+function setup() {
+    canvaSize = 525;
+    cnv = createCanvas(canvaSize, canvaSize);
+    diamondLimit = 5;
+
+}
+
+// =================================================
 // =================================================
 function draw() {
+    background(255);
+    stroke(0);
+    strokeWeight(1);
+    noFill(); 
+    rect(0, 0, canvaSize, canvaSize, 20);
+    var fundamentalPitch = document.getElementById("fundRange");
+    fundamentalPitch = fundamentalPitch.value;
+    text("Fundamental Pitch: " + fundamentalPitch + " Hz", 10, 20);
+    reduceOctave = document.getElementById("reduceOctave").checked;
+    strokeWeight(1);
     var x = canvaSize / 2;
     var y = canvaSize / 2;
     var w = 350;
@@ -40,8 +64,6 @@ function draw() {
 	}
     }
     identities.reverse();
-
-
     push();
     translate(x, y);
     rotate(radians(angle));
@@ -68,9 +90,12 @@ function draw() {
             var center = createVector(actualPos.x + w / (numberOfIdenties * 2), actualPos.y + h / (numberOfIdenties * 2));
             // draw the text
             var identityText = identities[j] + "/" + identities[i];
+            if (reduceOctave === true){
+                identityText = reduceOctaveOfRatio(identities[j], identities[i]);
+            }
             allRatios.push(identityText);
             var textWidth = identityText.length * 10;
-            textSize(10);
+            textSize(12);
             text(identityText, center.x, center.y);
         }
     }
@@ -85,7 +110,7 @@ function draw() {
             fill(238);
             rect(allPositions[i].x, allPositions[i].y, w / numberOfIdenties, h / numberOfIdenties);
             fill(0, 0, 0);
-            textSize(10);
+            textSize(14);
             text(allRatios[i], allPositions[i].x + w / (numberOfIdenties * 2), allPositions[i].y + h / (numberOfIdenties * 2));
             if (lastIdentityPlayer != i){
                 lastIdentityPlayer = i;
@@ -95,18 +120,22 @@ function draw() {
                 }
                 else{
                     actualRatio = allRatios[i];
-                    // get denominator and numerator
                     var denominator = actualRatio.split("/")[0];
                     var numerator = actualRatio.split("/")[1];
-                    // get the frequency
+                    // if reduceOctave is true, then reduce the octave
                     var freq = fundamentalPitch * (denominator / numerator);
-                    // get the midi note
                     var note = freq2midi(freq);
+                    playName = "player" + playNumber;
+                    playNumber = playNumber + 1;
+                    if (playNumber > 7){
+                        playNumber = 1;
+                    }
                     if(loader.webAudioWorklet) {
-                        loader.sendFloatParameterToWorklet("notes", note);
-                      } else {
-                        loader.audiolib.setFloatParameter("notes", note);
-                      }
+                        loader.sendFloatParameterToWorklet(playName, note);
+                    } 
+                    else {
+                        loader.audiolib.setFloatParameter(playName, note);
+                    }
                 }
             }
             
@@ -138,6 +167,7 @@ function mouseReleased() {
 // 
 function newDiamondLimit(limit){
     diamondLimit = limit;
+    reduceOctave = document.getElementById("octaveReduce").checked;
 }
 
 
