@@ -166,7 +166,13 @@ function mouseReleased() {
 // 
 function newDiamondLimit(limit){
     diamondLimit = limit;
+    if (diamondLimit === null){
+        diamondLimit = 5;
+    }
     reduceOctave = document.getElementById("octaveReduce").checked;
+    console.log("reduceOctave: " + reduceOctave);
+    console.log("diamondLimit: " + diamondLimit);
+
 }
 
 
