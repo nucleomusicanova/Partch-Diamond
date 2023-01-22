@@ -34,12 +34,12 @@ function setup() {
     canvaSize = 525;
     cnv = createCanvas(canvaSize, canvaSize);
     diamondLimit = 5;
-
 }
 
 // =================================================
 // =================================================
 function draw() {
+    reduceOctave = document.getElementById("reduceOctave").checked;
     background(255);
     stroke(0);
     strokeWeight(1);
@@ -48,7 +48,6 @@ function draw() {
     var fundamentalPitch = document.getElementById("fundRange");
     fundamentalPitch = fundamentalPitch.value;
     text("Fundamental Pitch: " + fundamentalPitch + " Hz", 10, 20);
-    reduceOctave = document.getElementById("reduceOctave").checked;
     strokeWeight(1);
     var x = canvaSize / 2;
     var y = canvaSize / 2;
