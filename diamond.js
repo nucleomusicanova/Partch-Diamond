@@ -56,12 +56,28 @@ function draw() {
     var angle = 45;
     var identities = [];
 
-    // get all odd-number until diamondLimit
     for(var i = 0; i <= diamondLimit; i++) {
 	if (i % 2 == 1) {
 	    identities.push(i);
 	}
     }
+    // put identities in ascendent order
+    var identityPositions;
+    var identityOrder = [];
+    for (var i = 0; i < identities.length; i++){
+        identityPositions = reduceOctaveOfRatio(identities[i], 1);
+        nume = identityPositions.split("/")[0];
+        deno = identityPositions.split("/")[1];
+        identityOrder.push(nume / deno);
+    }
+    var identityOrdered = identityOrder.slice();
+    identityOrdered.sort(function(a, b){return a-b});
+    var sortedIdentities = [];
+    for (var i = 0; i < identities.length; i++){
+        var index = identityOrdered.indexOf(identityOrder[i]);
+        sortedIdentities.push(identities[index]);
+    }
+    identities = sortedIdentities.slice();
     identities.reverse();
     push();
     translate(x, y);
@@ -75,7 +91,6 @@ function draw() {
     // all positions
     var allPositions = [];
     var allRatios = [];
-    // draw the diamond
     var numberOfIdenties = identities.length;
     for(var i = 0; i < numberOfIdenties; i++) {
         for(var j = 0; j < numberOfIdenties; j++) {
@@ -83,19 +98,20 @@ function draw() {
             var actualPos = createVector(-w / 2 + i * w / numberOfIdenties, -h / 2 + j * h / numberOfIdenties);
             rect(actualPos.x, actualPos.y, w / numberOfIdenties, h / numberOfIdenties);
             allPositions.push(actualPos);
-            // draw ratios
             fill(0, 0, 0);
-            // get center  of the rect
             var center = createVector(actualPos.x + w / (numberOfIdenties * 2), actualPos.y + h / (numberOfIdenties * 2));
-            // draw the text
             var identityText = identities[j] + "/" + identities[i];
+            push();
+            translate(center.x , center.y);
+            rotate(radians(-45));
             if (reduceOctave === true){
                 identityText = reduceOctaveOfRatio(identities[j], identities[i]);
             }
             allRatios.push(identityText);
             var textWidth = identityText.length * 10;
-            textSize(12);
-            text(identityText, center.x, center.y);
+            translate(-textWidth / 2, 5);
+            text(identityText, 0, 0);
+            pop();
         }
     }
 
@@ -109,8 +125,19 @@ function draw() {
             fill(238);
             rect(allPositions[i].x, allPositions[i].y, w / numberOfIdenties, h / numberOfIdenties);
             fill(0, 0, 0);
-            textSize(14);
-            text(allRatios[i], allPositions[i].x + w / (numberOfIdenties * 2), allPositions[i].y + h / (numberOfIdenties * 2));
+            push();
+            var center = createVector(allPositions[i].x + w / (numberOfIdenties * 2), allPositions[i].y + h / (numberOfIdenties * 2));
+            translate(center.x , center.y);
+            rotate(radians(-45));
+            var identityText = allRatios[i];
+            var textWidth = identityText.length * 10;
+            translate(-textWidth / 2, 5);
+            textSize(20);
+            text(identityText, 0, 0);
+            pop();
+
+
+
             if (lastIdentityPlayer != i){
                 lastIdentityPlayer = i;
                 if (document.getElementById("transportButton").checked === false){
@@ -121,7 +148,6 @@ function draw() {
                     actualRatio = allRatios[i];
                     var denominator = actualRatio.split("/")[0];
                     var numerator = actualRatio.split("/")[1];
-                    // if reduceOctave is true, then reduce the octave
                     var freq = fundamentalPitch * (denominator / numerator);
                     var note = freq2midi(freq);
                     playName = "player" + playNumber;
@@ -144,6 +170,7 @@ function draw() {
         lastIdentityPlayer = -1;
     }
     pop();
+
 }
 
 
