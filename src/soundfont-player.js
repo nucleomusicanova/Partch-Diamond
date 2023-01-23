@@ -73,7 +73,7 @@ function isSoundfontURL (name) {
 function nameToUrl (name, sf, format) {
   format = format === 'ogg' ? format : 'mp3'
   sf = sf === 'FluidR3_GM' ? sf : 'MusyngKite'
-  return './celesta-mp3.js'
+  return './src/celesta-mp3.js'
 }
 
 // In the 1.0.0 release it will be:
